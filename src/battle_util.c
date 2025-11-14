@@ -1909,21 +1909,24 @@ bool8 HandleFaintedMonActions(void)
                     gAbsentBattlerFlags &= ~(gBitTable[i]);
             }
             // fall through
-        case 1:
-            do
-            {
-                gBattlerFainted = gBattlerTarget = gBattleStruct->faintedActionsBattlerId;
-                if (gBattleMons[gBattleStruct->faintedActionsBattlerId].hp == 0
-                 && !(gBattleStruct->givenExpMons & gBitTable[gBattlerPartyIndexes[gBattleStruct->faintedActionsBattlerId]])
-                 && !(gAbsentBattlerFlags & gBitTable[gBattleStruct->faintedActionsBattlerId]))
-                {
-                    BattleScriptExecute(BattleScript_GiveExp);
-                    gBattleStruct->faintedActionsState = 2;
-                    return TRUE;
-                }
-            } while (++gBattleStruct->faintedActionsBattlerId != gBattlersCount);
-            gBattleStruct->faintedActionsState = 3;
-            break;
+         case 1:
+    do
+    {
+        gBattlerFainted = gBattlerTarget = gBattleStruct->faintedActionsBattlerId;
+
+        // EXP ALL enabled: all non-fainted party Pokémon receive EXP
+        if (gBattleMons[gBattleStruct->faintedActionsBattlerId].hp == 0)
+        {
+            BattleScriptExecute(BattleScript_GiveExp);
+            gBattleStruct->faintedActionsState = 2;
+            return TRUE;
+        }
+
+    } while (++gBattleStruct->faintedActionsBattlerId != gBattlersCount);
+
+    gBattleStruct->faintedActionsState = 3;
+    break;
+
         case 2:
             OpponentSwitchInResetSentPokesToOpponentValue(gBattlerFainted);
             if (++gBattleStruct->faintedActionsBattlerId == gBattlersCount)
