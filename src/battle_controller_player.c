@@ -1156,6 +1156,9 @@ static void Task_GiveExpToMon(u8 taskId)
     u32 monId = (u8)(gTasks[taskId].tExpTask_monId);
     u8 battler = gTasks[taskId].tExpTask_battler;
     s16 gainedExp = gTasks[taskId].tExpTask_gainedExp;
+    // EXP MULTIPLIER — 1.5x EXP
+    gainedExp = (gainedExp * 3) / 2;
+
 
     if (IsDoubleBattle() == TRUE || monId != gBattlerPartyIndexes[battler]) // Give exp without moving the expbar.
     {
